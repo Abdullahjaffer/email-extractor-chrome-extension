@@ -3,14 +3,6 @@ import LoadCSV from './LoadCSV';
 import './Popup.css';
 import StateScreen from './StateScreen';
 
-const getTabs = async () => {
-  return new Promise((resolve) => {
-    chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-      resolve(tabs);
-    });
-  });
-};
-
 // step 0 is loading
 // step 1 is load csv
 // step 2 is scripting
@@ -20,22 +12,19 @@ const Popup = () => {
   const [step, setStep] = useState(0);
 
   useEffect(() => {
-
-
-    getState()
-  }, [])
+    getState();
+  }, []);
 
   const getState = () => {
-    setStep(0)
-    chrome.storage.local.get(["parsedRecords"]).then((result) => {
+    setStep(0);
+    chrome.storage.local.get(['parsedRecords']).then((result) => {
       if (!result.parsedRecords) {
-        setStep(1)
-      }
-      else {
-        setStep(2)
+        setStep(1);
+      } else {
+        setStep(2);
       }
     });
-  }
+  };
 
   return (
     <div className="App">
