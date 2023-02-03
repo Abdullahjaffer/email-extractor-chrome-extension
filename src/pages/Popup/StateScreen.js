@@ -1,0 +1,166 @@
+import _ from 'lodash';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
+import { CSVLink } from "react-csv";
+import exeScript from './exeScript';
+import './Popup.css';
+
+const getTabs = async () => {
+    return new Promise((resolve) => {
+        chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+            resolve(tabs)
+        })
+    })
+}
+
+
+
+const StateScreen = ({ revalidate }) => {
+
+
+    const [isRunning, setIsRunning] = useState(false)
+    const runRef = useRef(false);
+    const [loading, setLoading] = useState(false)
+    const [records, setRecords] = useState([])
+    const recordsRef = useRef([])
+
+    const doneRecords = useMemo(() => {
+        return _.cloneDeep(records).filter(record => record.Email).length
+    }, [records])
+
+    useEffect(() => {
+        chrome.storage.local.get(["parsedRecords"]).then((result) => {
+            setRecords(JSON.parse(result.parsedRecords))
+            recordsRef.current = JSON.parse(result.parsedRecords)
+        });
+    }, [])
+
+    async function unregisterAllDynamicContentScripts() {
+        setLoading(true)
+        try {
+            const scripts = await chrome.scripting.getRegisteredContentScripts();
+            const scriptIds = scripts.map(script => script.id);
+            return chrome.scripting.unregisterContentScripts({
+                ids: scriptIds
+            });
+        } catch (error) {
+            const message = [
+                "An unexpected error occurred while",
+                "unregistering dynamic content scripts.",
+            ].join(" ");
+            throw new Error(message, { cause: error });
+        } finally {
+            setLoading(false)
+        }
+    }
+
+    const onScrapStart = async (str = ''
+    ) => {
+        const tabs = await getTabs()
+        return chrome.scripting.executeScript(
+            {
+                target: {
+                    tabId: tabs[0].id
+                },
+                function: exeScript,
+                args: [{
+                    str
+                }]
+            })
+    }
+
+    const onStart = async () => {
+        await unregisterAllDynamicContentScripts()
+        setIsRunning(true)
+        runRef.current = true
+        const allRecords = _.cloneDeep(recordsRef.current)
+        const unRec = allRecords.filter(record => !record.Email)
+        for (let i = 0; i < unRec.length; i++) {
+            const str = `${unRec[i].Full} ${unRec[i].Name} ${unRec[i].website}`
+            let newRecords = _.cloneDeep(recordsRef.current)
+            let email = await onScrapStart(str).then(res => res[0].result)
+            newRecords = newRecords.map(el => el.ID === unRec[i].ID ? ({
+                ...el,
+                Email: email
+            }) : el)
+            recordsRef.current = newRecords
+            setRecords(() => [...newRecords])
+            await chrome.storage.local.set({ 'parsedRecords': JSON.stringify(newRecords) })
+            if (!runRef.current) {
+                break;
+            }
+        }
+    }
+
+    const onStop = async () => {
+        setIsRunning(false)
+        runRef.current = false
+    }
+    const onDelete = async () => {
+        await chrome.storage.local.set({ 'parsedRecords': '' })
+        revalidate()
+    }
+
+    const onDownload = () => {
+        chrome.storage.local.get(["parsedRecords"]).then((result) => {
+
+        });
+    }
+
+    if (loading) {
+        return <div class="lds-ripple">
+            <div></div>
+            <div></div>
+        </div>
+    }
+
+
+    return (
+        <div className="App">
+            {
+                !isRunning && <button onClick={onStart}>
+                    {
+                        doneRecords ? 'Resume' : "Start"
+                    }
+                </button>
+            }
+            {
+                isRunning && <button onClick={onStop}>
+                    Stop
+                </button>
+            }
+
+            <h2>
+                Task Finished: {((doneRecords / (records.length || 1)) * 100).toFixed(0)} %
+
+            </h2>
+            <h5>
+                Total Records: {records.length}
+                <br />
+                Total Done: {doneRecords}
+                <br />
+                Emails Found: {
+                    _.cloneDeep(records).filter(record => record.Email && record.Email !== 'NOT_FOUND').length
+                }
+            </h5>
+            <CSVLink
+                data={records}
+                filename={"cx-leads.csv"}
+
+            >
+                <button
+                    style={{
+                        marginTop: 20
+                    }}
+                >
+                    Download
+                </button>
+            </CSVLink>
+            <br />
+            <button onClick={onDelete}>
+                Reset Everything
+            </button>
+        </div>
+    );
+};
+
+export default StateScreen;
