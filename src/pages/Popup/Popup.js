@@ -29,7 +29,7 @@ const Popup = () => {
   return (
     <div className="App">
       {step === 0 ? (
-        <div class="lds-ripple">
+        <div className="lds-ripple" >
           <div></div>
           <div></div>
         </div>
@@ -37,8 +37,9 @@ const Popup = () => {
         <LoadCSV revalidate={getState} />
       ) : step === 2 ? (
         <StateScreen revalidate={getState} />
-      ) : undefined}
-    </div>
+      ) : undefined
+      }
+    </div >
   );
 };
 

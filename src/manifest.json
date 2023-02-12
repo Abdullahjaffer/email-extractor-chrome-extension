@@ -15,5 +15,11 @@
       "matches": []
     }
   ],
-  "permissions": ["activeTab", "scripting", "tabs", "storage"]
+  "permissions": [
+    "activeTab",
+    "scripting",
+    "tabs",
+    "storage",
+    "unlimitedStorage"
+  ]
 }

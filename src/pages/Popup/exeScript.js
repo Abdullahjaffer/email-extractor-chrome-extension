@@ -44,6 +44,8 @@ const exeScript = async ({ str }) => {
     }
   }
 
+  // document.querySelector(`[data-tooltip="From user's Google profile"]`)
+
   // ACTUAL CODE
   if (!document.querySelector(PATHS.RECIPIENT_PATH)) {
     getElementByXpath(PATHS.COMPOSE_BUTTON_PATH).click();

