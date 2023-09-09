@@ -1,6 +1,6 @@
 # Email Extractor Chrome Extension
 
-![Logo](src/assets/img/icon-1024.png.png)
+![Logo](src/assets/img/icon-1024.png =100x)
 
 ## Features
 
@@ -8,9 +8,9 @@
 
 ## Screenshots
 
-![App Screenshot](doc/1.png)
-![App Screenshot](doc/2.png)
-![App Screenshot](doc/3.png)
+![App Screenshot](doc/1.png =200x)
+![App Screenshot](doc/2.png =200x)
+![App Screenshot](doc/3.png =200x)
 
 ## Run Locally
 
