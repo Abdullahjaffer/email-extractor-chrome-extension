@@ -1,6 +1,6 @@
 # Email Extractor Chrome Extension
 
-![Logo](src/assets/img/icon-1024.png =100x)
+![Logo](doc/1.png)
 
 ## Features
 
@@ -8,9 +8,9 @@
 
 ## Screenshots
 
-![App Screenshot](doc/1.png =200x)
-![App Screenshot](doc/2.png =200x)
-![App Screenshot](doc/3.png =200x)
+![App Screenshot](doc/1.png)
+![App Screenshot](doc/2.png)
+![App Screenshot](doc/3.png)
 
 ## Run Locally
 
@@ -68,9 +68,3 @@ _(All are Case Sensitive)_
 ## 🔗 Links
 
 [![linkedin](https://img.shields.io/badge/linkedin-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://www.linkedin.com/)
-
-## LICENSEs
-
-[![MIT License](https://img.shields.io/apm/l/atomic-design-ui.svg?)](https://github.com/tterb/atomic-design-ui/blob/master/LICENSEs)
-[![GPLv3 License](https://img.shields.io/badge/License-GPL%20v3-yellow.svg)](https://opensource.org/licenses/)
-[![AGPL License](https://img.shields.io/badge/license-AGPL-blue.svg)](http://www.gnu.org/licenses/agpl-3.0)
