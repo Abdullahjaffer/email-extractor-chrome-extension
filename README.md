@@ -17,3 +17,11 @@ website is company domain
 <br />
 
 stop and download the CSV with emails
+
+Sample:
+
+![Alt text](doc/1.png 'File columns type')
+
+![Alt text](doc/2.png 'Upload')
+
+![Alt text](doc/3.png 'Inprogress')
