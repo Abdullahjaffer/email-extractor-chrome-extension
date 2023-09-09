@@ -1,6 +1,6 @@
 # Email Extractor Chrome Extension
 
-![Logo](doc/1.png)
+![Logo](doc/0.png)
 
 ## Features
 
