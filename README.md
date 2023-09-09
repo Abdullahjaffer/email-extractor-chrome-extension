@@ -1,4 +1,4 @@
-# Email Extractor
+# Email Extractor Chrome Extension
 
 ![Logo](src/assets/img/icon-1024.png.png)
 
