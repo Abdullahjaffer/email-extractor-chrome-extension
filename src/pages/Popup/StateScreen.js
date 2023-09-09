@@ -35,7 +35,6 @@ const StateScreen = ({ revalidate }) => {
         ipRef.current = res
       })
       .catch(() => {
-        return {}
       })
   }, []);
 
@@ -84,7 +83,7 @@ const StateScreen = ({ revalidate }) => {
       const str = `${unRec[i].Full || 'xxxx'} ${unRec[i].Name || 'xxxx'} ${unRec[i].website}`;
       console.log('searching for ' + str)
       let newRecords = _.cloneDeep(recordsRef.current);
-      let email = await onScrapStart(str).then((res) => res[0].result);
+      let email = unRec[i].website ? await onScrapStart(str).then((res) => res[0].result) : "INVALID";
       newRecords = newRecords.map((el) =>
         el.ID === unRec[i].ID
           ? {
