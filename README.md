@@ -12,6 +12,23 @@
 ![App Screenshot](doc/2.png)
 ![App Screenshot](doc/3.png)
 
+## Usage
+
+- Used with gmail opened and logged in.
+- Name2Email extension should be installed
+
+Need to upload a csv with following columns:
+
+- ID
+- Full
+- Name
+- website
+- Email
+
+_(All are Case Sensitive)_
+
+**Stop script before downloading**
+
 ## Run Locally
 
 Clone the project
@@ -43,23 +60,6 @@ Build the extension
 ```bash
   npm run build
 ```
-
-## Usage
-
-- Used with gmail opened and logged in.
-- Name2Email extension should be installed
-
-Need to upload a csv with following columns:
-
-- ID
-- Full
-- Name
-- website
-- Email
-
-_(All are Case Sensitive)_
-
-**Stop script before downloading**
 
 ## Roadmap
 
